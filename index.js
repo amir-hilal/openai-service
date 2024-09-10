@@ -14,12 +14,12 @@ app.use(bodyParser.json());
 
 app.post('/api/openai/chat', async (req, res) => {
     try {
-        const { message } = req.body;
+        const { messages } = req.body;
         const api_key = process.env.OPENAI_API_KEY;
 
-        if (!message) {
-            console.error('Message is missing in the request body');
-            return res.status(400).json({ error: 'Message is missing in the request body' });
+        if (!messages) {
+            console.error('Messages is missing in the request body');
+            return res.status(400).json({ error: 'Messages is missing in the request body' });
         }
 
         if (!api_key) {
@@ -27,12 +27,11 @@ app.post('/api/openai/chat', async (req, res) => {
             return res.status(500).json({ error: 'OpenAI API key not found' });
         }
 
-        console.log('Received message:', message);
-        console.log('Using OpenAI API key:', api_key);
+        console.log('Received message:', messages);
 
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
-            model: 'gpt-3.5-turbo',
-            messages: [{ role: 'user', content: message }],
+            model: 'gpt-4o-mini',
+            messages: messages,
             max_tokens: 150,
             temperature: 0.7,
         }, {
